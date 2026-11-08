@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Découvrez les projets et les développeurs de GitHub, puis explorez les ajouts de leurs forks.">
+  <title>RepoAtlas — Explorez GitHub autrement.</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/discover.css">
+  <script src="/app.js" type="module"></script>
+  <script src="/discover.js" type="module"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Aller au contenu</a>
+  <header class="shell header">
+    <a href="/" class="brand" aria-label="RepoAtlas, accueil"><span class="brand-icon" aria-hidden="true">⑂</span>Repo<span>Atlas</span><small>GITHUB EXPLORER · V0.3</small></a>
+    <button type="button" id="github-settings" class="connection" aria-label="Configurer la connexion GitHub"><span aria-hidden="true"></span><span id="connection">Connexion GitHub…</span><span aria-hidden="true">⚙</span></button>
+  </header>
+  <main class="shell" id="main" tabindex="-1">
+    <noscript><p class="notice">Activez JavaScript pour découvrir les projets, les développeurs et les forks.</p></noscript>
+    <section class="explore-intro"><div><p class="eyebrow">LE CODE OUVRE DES POSSIBILITÉS</p><h1>Votre prochaine découverte, <span>ici.</span></h1></div><p class="lead">Projets, créateurs et améliorations.<br>Un autre regard sur GitHub.</p></section>
+    <nav class="explore-nav" aria-label="Modes d’exploration"><a href="#projects" data-view="projects" aria-current="page">↗ Projets</a><a href="#people" data-view="people">◎ Développeurs</a><a href="#forks" data-view="forks">⑂ Analyse des forks</a></nav>
+
+    <aside id="app-notice" class="app-notice" role="status" aria-live="polite" hidden><span class="notice-symbol" aria-hidden="true">!</span><div class="notice-copy"><strong id="notice-title"></strong><p id="notice-body"></p><p id="notice-time"></p></div><div class="notice-actions"><button id="notice-primary" type="button"></button><button id="notice-retry" type="button" class="notice-secondary">Réessayer</button></div></aside>
+
+    <section id="view-projects" class="discovery-view" aria-labelledby="project-heading">
+      <div class="view-heading"><h2 id="project-heading">À découvrir</h2><div class="view-tools"><span id="projects-freshness" class="local-label">Sélection GitHub</span><button type="button" id="projects-refresh" class="refresh-button" aria-label="Actualiser les projets">↻ Actualiser</button></div></div>
+      <form id="projects-form" class="discovery-form">
+        <fieldset class="mode-options"><legend class="sr-only">Quels projets découvrir ?</legend><label><input type="radio" name="mode" value="popular" checked><span>Populaires récemment</span></label><label><input type="radio" name="mode" value="recent"><span>Nouveautés</span></label><label><input type="radio" name="mode" value="stars"><span>Les plus étoilés</span></label><label><input type="radio" name="mode" value="active"><span>Actifs récemment</span></label></fieldset>
+        <div class="discovery-fields quick-fields"><label>Rechercher un projet<input name="query" type="search" maxlength="100" placeholder="Un outil, un sujet, une idée…" autocomplete="off" aria-describedby="projects-search-hint"></label><label>Langage<select name="language" class="language-options"><option value="">Tous les langages</option></select></label></div>
+        <div class="filter-bottom"><details class="advanced-filters" id="projects-advanced"><summary>Plus de filtres <span class="filter-count" id="projects-filter-count" hidden></span></summary><div class="discovery-fields advanced-fields"><label>Période<select name="days"><option value="7">7 derniers jours</option><option value="30" selected>30 derniers jours</option><option value="90">90 derniers jours</option></select></label><label>Minimum de stars<select name="minStars"><option value="0">Aucun minimum</option><option value="10" selected>10 stars</option><option value="100">100 stars</option><option value="1000">1 000 stars</option><option value="10000">10 000 stars</option></select></label><label>Licence<select name="license"><option value="">Toutes / non identifiée</option><option value="mit">MIT</option><option value="apache-2.0">Apache 2.0</option><option value="gpl-3.0">GPL 3.0</option><option value="bsd-3-clause">BSD 3-Clause</option></select></label></div></details><button type="reset" class="reset-button">Réinitialiser</button></div>
+        <p id="projects-search-hint" class="search-hint">La recherche s’actualise pendant la saisie.</p>
+      </form>
+      <div id="projects-loading" class="scan-state" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><p></p><button type="button" class="discovery-cancel">Annuler</button></div>
+      <div id="projects-skeleton" class="skeleton-grid" aria-hidden="true" hidden><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div id="projects-welcome" class="discovery-empty" hidden><h3>Votre exploration commence ici.</h3><p>Essayez une recherche ou relancez la sélection avec « Actualiser ».</p></div>
+      <div id="projects-results" class="discovery-results" hidden><div class="discovery-result-heading"><h3 tabindex="-1"></h3><a target="_blank" rel="noopener noreferrer">Vérifier sur GitHub ↗</a></div><details class="result-context"><summary>À propos de cette sélection</summary><p class="result-scope"></p></details><div class="discovery-grid"></div><p class="discovery-no-results" hidden>Aucun projet pour ces filtres. Essayez un mot-clé plus court ou réinitialisez les filtres.</p><div class="pagination"><button type="button" data-direction="-1">← Précédent</button><span></span><button type="button" data-direction="1">Suivant →</button></div></div>
+    </section>
+
+    <section id="view-people" class="discovery-view" aria-labelledby="people-heading" hidden>
+      <div class="view-heading"><h2 id="people-heading">Les personnes derrière le code</h2><div class="view-tools"><span id="people-freshness" class="local-label">Profils publics</span><button type="button" id="people-refresh" class="refresh-button" aria-label="Actualiser les développeurs">↻ Actualiser</button></div></div>
+      <form id="people-form" class="discovery-form">
+        <div class="discovery-fields quick-fields people-quick"><div class="location-field"><label for="location-input">Ville ou pays</label><input id="location-input" type="text" name="location" maxlength="80" placeholder="Dakar, Senegal, Paris…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="location-suggestions" aria-describedby="location-hint"><ul id="location-suggestions" class="location-suggestions" role="listbox" aria-label="Suggestions de localisation" hidden></ul></div><label>Classer par<select name="mode"><option value="followers">Abonnés</option><option value="repositories">Dépôts publics</option><option value="starred">Projets étoilés · 20 profils</option><option value="commits">Commits indexés · 20 profils</option></select></label></div>
+        <div class="filter-bottom"><details class="advanced-filters" id="people-advanced"><summary>Plus de filtres <span class="filter-count" id="people-filter-count" hidden></span></summary><div class="discovery-fields advanced-fields"><label>Nom ou pseudo<input type="search" name="query" maxlength="60" placeholder="Rechercher une personne…" autocomplete="off"></label><label>Langage<select name="language" class="language-options"><option value="">Tous les langages</option></select></label><label>Période des commits<select name="days"><option value="30">30 derniers jours</option><option value="90">90 derniers jours</option></select></label></div></details><button type="reset" class="reset-button">Réinitialiser</button></div>
+        <div class="location-shortcuts"><span>Explorer autour de</span><button type="button" data-location="Dakar">Dakar</button><button type="button" data-location="Cotonou">Cotonou</button><button type="button" data-location="Abidjan">Abidjan</button><button type="button" data-location="Paris">Paris</button></div>
+        <p id="location-hint" class="search-hint">Suggestions de villes et pays ; saisie libre possible. Recherche sur la localisation déclarée sur GitHub.</p>
+      </form>
+      <div id="people-loading" class="scan-state" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><p></p><button type="button" class="discovery-cancel">Annuler</button></div>
+      <div id="people-skeleton" class="skeleton-grid people-grid" aria-hidden="true" hidden><span></span><span></span><span></span><span></span></div>
+      <div id="people-welcome" class="discovery-empty" hidden><h3>Une communauté à explorer.</h3><p>Essayez une ville, un pays ou un nom.</p></div>
+      <div id="people-results" class="discovery-results" hidden><div class="discovery-result-heading"><h3 tabindex="-1"></h3><a target="_blank" rel="noopener noreferrer">Vérifier sur GitHub ↗</a></div><details class="result-context"><summary>À propos de ce classement</summary><p class="result-scope"></p><p class="location-note"></p></details><div class="discovery-grid people-grid"></div><p class="discovery-no-results" hidden>Aucun profil pour ces filtres. Essayez une autre ville ou une autre orthographe.</p><div class="pagination"><button type="button" data-direction="-1">← Précédent</button><span></span><button type="button" data-direction="1">Suivant →</button></div></div>
+    </section>
+
+    <section id="view-forks" aria-label="Analyse des forks" hidden>
+    <section class="intro">
+      <p class="eyebrow">L’EXPLORATEUR DE FORKS GITHUB</p>
+      <h2 class="fork-heading">Le projet continue.<br><span>Parfois dans un fork.</span></h2>
+      <p class="lead">Retrouvez les ajouts dispersés, examinez le code<br class="desktop-break"> et voyez ce que chaque branche a laissé derrière elle.</p>
+      <form id="scan-form" class="search-form">
+        <label for="repo-url">URL du dépôt public</label>
+        <div class="search-row"><span aria-hidden="true" class="search-icon">↗</span><input type="url" id="repo-url" name="url" required placeholder="https://github.com/propriétaire/dépôt" autocomplete="url" spellcheck="false" aria-describedby="scan-help"><button id="scan-button" type="submit">Explorer les forks <span aria-hidden="true">→</span></button></div>
+        <div class="form-bottom"><p id="scan-help">Données GitHub en direct · Aucun dépôt cloné</p><button class="example" id="gron-example" type="button">Essayer avec gron ↗</button></div>
+      </form>
+      <noscript><p class="notice">Activez JavaScript pour lancer une analyse.</p></noscript>
+      <div id="scan-state" class="scan-state" role="status" aria-live="polite" hidden><span class="spinner" aria-hidden="true"></span><p id="progress-text"></p><button id="cancel-button" type="button">Annuler</button></div>
+    </section>
+
+    <section id="welcome" class="welcome" aria-labelledby="welcome-title">
+      <div class="welcome-line"><span class="eyebrow">UNE AUTRE LECTURE DE GITHUB</span><span class="line"></span><span class="mono">01 → 03</span></div>
+      <h2 id="welcome-title" class="sr-only">Ce que vous allez explorer</h2>
+      <div class="guide-grid">
+        <article><span class="guide-number">01</span><h3>Les ajouts repérés</h3><p>Titres des commits et propositions de contribution. Chaque piste garde sa source.</p></article>
+        <article><span class="guide-number">02</span><h3>Les preuves dans le code</h3><p>Ouvrez la comparaison, les commits et les fichiers concernés sur GitHub.</p></article>
+        <article><span class="guide-number">03</span><h3>L’écart avec l’origine</h3><p>Commits supplémentaires et manquants, pour replacer chaque ajout dans son contexte.</p></article>
+      </div>
+    </section>
+
+    <section id="results" aria-labelledby="results-title" hidden>
+      <div class="results-heading"><div><p class="eyebrow">RÉSULTATS DE L’EXPLORATION</p><h2 id="results-title" tabindex="-1"></h2><p id="repo-description" class="muted"></p></div><a id="repo-link" class="outline-link" target="_blank" rel="noopener noreferrer">Voir le dépôt ↗</a></div>
+      <div id="stats" class="stats"></div>
+      <div class="toolbar"><div class="filter-wrap"><label for="filter">Chercher dans les résultats</label><input id="filter" type="search" placeholder="yaml, stream, with-filename…" autocomplete="off"></div><label class="checkbox"><input id="show-unchanged" type="checkbox"> Inclure les branches sans ajout</label></div>
+      <div class="list-heading"><p id="result-count" role="status" aria-live="polite"></p><span>Ajouts d’abord · Retard croissant</span></div>
+      <div id="cards" class="cards"></div>
+      <p id="empty" class="empty" hidden></p>
+      <details class="method"><summary>Comment lire ces résultats ?</summary><div><p>RepoAtlas lit au maximum 20 forks récents, 10 forks étoilés et 30 pull requests ouvertes. Il sélectionne jusqu’à 16 branches, dont au plus 10 branches de PR. Cette exploration est un échantillon, pas un inventaire exhaustif.</p><p>Les ajouts sont repérés à partir des titres et descriptions des PR, messages de commits et noms de fichiers. Les catégories sont attribuées par mots-clés ; aucune IA n’est appelée et aucun correctif n’est exécuté ou certifié. Une PR ouverte peut nécessiter des adaptations.</p><p>« En avance » désigne les commits présents sur la branche comparée mais absents de la référence. « En retard » désigne les commits de la référence qui manquent à cette branche. Les fichiers affichés correspondent à la différence depuis l’ancêtre commun, comme dans la comparaison GitHub.</p><p id="snapshot-note"></p><p>Les réponses GitHub restent en mémoire pendant dix minutes pour économiser le quota. Un redémarrage efface ce cache. Votre jeton éventuel reste dans le serveur local.</p></div></details>
+    </section>
+    </section>
+    <footer><p><strong>RepoAtlas</strong> · Outil ouvert, exploration locale.</p><a href="https://docs.github.com/en/rest" target="_blank" rel="noopener noreferrer">Propulsé par l’API GitHub ↗</a></footer>
+  </main>
+  <dialog id="github-dialog" class="github-dialog" aria-labelledby="github-dialog-title"><div class="dialog-heading"><div><p class="eyebrow">VOTRE ACCÈS, EN LOCAL</p><h2 id="github-dialog-title">Configurer GitHub</h2></div><button id="github-close" type="button" aria-label="Fermer la configuration">×</button></div><p>Un jeton personnel augmente le quota de lecture. Il reste dans votre serveur local.</p><ol><li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Créer un jeton à permissions fines sur GitHub ↗</a><p>Choisissez votre compte, une expiration et l’accès aux dépôts publics en lecture. Aucune permission d’écriture n’est nécessaire.</p></li><li>Dans le terminal du projet, lancez :<pre>npm run github:token</pre><button type="button" id="copy-env" class="outline-link">Copier la commande</button><p>Collez le jeton dans la saisie masquée, puis appuyez sur Entrée. La commande le vérifie auprès de GitHub et l’enregistre dans .env, avec un accès réservé à votre utilisateur.</p><p id="copy-status" role="status"></p></li><li>Revenez dans RepoAtlas et rechargez la page. Le jeton est pris en compte sans redémarrer le serveur ; l’en-tête indique alors « GitHub · Jeton configuré ».</li></ol><p class="dialog-note">Ne publiez pas votre jeton. Le fichier .env est déjà exclu de Git. Les quotas GitHub restent applicables avec un jeton.</p></dialog>
+</body>
+</html>
