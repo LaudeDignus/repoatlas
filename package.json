@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test",
     "github:token": "node scripts/github-token.mjs"
   }
 }
